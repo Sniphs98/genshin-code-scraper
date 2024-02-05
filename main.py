@@ -44,18 +44,24 @@ search_results = driver.find_elements(By.CLASS_NAME, "c-archiveSearchListItem")
 search_results = filter_redeem_codes(search_results)
 highest_version_element = find_highest_version(search_results)
 
-#search_results[1].get_attribute("innerHTML")
-print(highest_version_element.get_attribute("href"))
+
+#print(highest_version_element.get_attribute("innerHTML"))
+#print(highest_version_element.text)
+
+driver.get("https://game8.co/games/Genshin-Impact/archives/440922")
+time.sleep(2)
+
+tables = driver.find_elements(By.CLASS_NAME, "a-table")
+
+for table in tables:
+    print(table)
+        
 
 
+#print(highest_version_element.get_attribute("innerHTML"))
 
-
-
-#with open('scraper.html', 'w') as file:
-#    for element in search_results:
-#        file.write(element.get_attribute("innerHTML"))
-#        file.write("\n")
-
+#with open('scraper.html', 'a') as file:
+#    file.write()
 
 print("finished.")
 
