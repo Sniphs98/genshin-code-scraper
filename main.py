@@ -3,10 +3,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+import requests
 import time
 import re
 
 URL = "https://game8.co/games/Genshin-Impact/search?q=Redeem+Codes"
+last_version_string = ""
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get(URL)
@@ -44,6 +46,18 @@ search_results = driver.find_elements(By.CLASS_NAME, "c-archiveSearchListItem")
 search_results = filter_redeem_codes(search_results)
 highest_version_element = find_highest_version(search_results)
 
+with open('last_version.txt', 'r') as file:
+    last_version_string = file.read()
+
+print(last_version_string)
+
+with open('last_version.txt', 'w') as file:
+    if(highest_version_element.text not in last_version_string):
+        print("-New Version")
+        requests.post("https://ntfy.sh/genshin_codes",
+        data="New Version is Up 🚀🎉".encode(encoding='utf-8'))
+        file.write(highest_version_element.text)
+    
 
 #print(highest_version_element.get_attribute("innerHTML"))
 #print(highest_version_element.text)
@@ -53,10 +67,8 @@ time.sleep(2)
 
 tables = driver.find_elements(By.CLASS_NAME, "a-table")
 
-for table in tables:
-    print(table)
-        
-
+#for table in tables:
+#    print(table)
 
 #print(highest_version_element.get_attribute("innerHTML"))
 
