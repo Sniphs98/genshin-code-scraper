@@ -93,7 +93,9 @@ return_string = "New Version is up "+ version_string +" 🚀🎉 \n"
 if new_version_bool:
     for code in codes:
         return_string = return_string + "- " + code + '\n'
-    requests.post("https://ntfy.sh/genshin_codes",data=return_string.encode(encoding='utf-8'))
+    requests.post("https://ntfy.sh/genshin_codes",
+    data=return_string.encode(encoding='utf-8'),
+    headers={ "Click": "https://genshin.hoyoverse.com/de/gift" })
 print("finished.")
 
 
