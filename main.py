@@ -89,13 +89,17 @@ for tr in tr_elements:
         #print(element.text)
         codes.append(element.text)
 
-return_string = "New Version is up "+ version_string +" 🚀🎉 \n"
+return_string = ""
 if new_version_bool:
     for code in codes:
         return_string = return_string + "- " + code + '\n'
     requests.post("https://ntfy.sh/genshin_codes",
     data=return_string.encode(encoding='utf-8'),
-    headers={ "Click": "https://genshin.hoyoverse.com/de/gift" })
+    headers={
+        "Tags": "robot",
+        "Title": "New Version is up "+ version_string +" 🚀🎉", 
+        "Click": "https://genshin.hoyoverse.com/de/gift",
+        "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png" })
 print("finished.")
 
 
