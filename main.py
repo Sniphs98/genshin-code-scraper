@@ -10,7 +10,7 @@ import re
 URL = "https://game8.co/games/Genshin-Impact/search?q=Redeem+Codes"
 last_version_string = ""
 version_string = "0.0"
-
+new_version_bool = False
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get(URL)
 driver.implicitly_wait(5)
@@ -41,12 +41,19 @@ def find_highest_version(search_results):
             if version_string < match.group(1):
                 version_string = match.group(1)
                 newest_element = element
+                new_version_bool = True
     return newest_element
 
 def write_newest_version_to_file():
     with open('last_version.txt', 'w') as file:
         file.write(highest_version_element.text)
-        
+
+def string_spliter(codes):
+    code_dic = {}
+    for code in codes:
+        code_dic = code.split(')')
+    return code_dic
+
 search_results = driver.find_elements(By.CLASS_NAME, "c-archiveSearchListItem")
 search_results = filter_redeem_codes(search_results)
 highest_version_element = find_highest_version(search_results)
@@ -58,13 +65,9 @@ if(last_version_string):
     print("in last string")
     if(last_version_string.find(version_string)):
         print("-New Version")
-        requests.post("https://ntfy.sh/genshin_codes",
-        data="New Version is Up 🚀🎉".encode(encoding='utf-8'))
         write_newest_version_to_file()
 else:
         print("-Empty file")
-        requests.post("https://ntfy.sh/genshin_codes",
-        data="New Version is Up 🚀🎉".encode(encoding='utf-8'))
         write_newest_version_to_file()
     
 
@@ -78,14 +81,19 @@ tables = driver.find_elements(By.CLASS_NAME, "a-table")
 #for table in tables:
     #print("-----------------------------------------------------------------")
     #print(table.get_attribute("innerHTML"))
-code = []
+codes = []
 tr_elements = tables[0].find_elements(By.TAG_NAME,"tr")
 for tr in tr_elements:
     center_elements = tr.find_elements(By.CLASS_NAME,"center")
     for element in center_elements:
         #print(element.text)
-        code.append(element.text)
+        codes.append(element.text)
 
+return_string = "New Version is up "+ version_string +" 🚀🎉 \n"
+if new_version_bool:
+    for code in codes:
+        return_string = return_string + "- " + code + '\n'
+    requests.post("https://ntfy.sh/genshin_codes",data=return_string.encode(encoding='utf-8'))
 print("finished.")
 
 
