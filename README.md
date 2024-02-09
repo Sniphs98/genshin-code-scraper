@@ -5,3 +5,9 @@
 - [x] Task 3: Handy push notification
 - [ ] Task 4: Create docker file
 - [ ] Task 5: Auto aktivate codes
+
+# Docker
+#### Build docker image
+```dockerfile
+docker build -t genshin_code_scraper_docker .
+```
