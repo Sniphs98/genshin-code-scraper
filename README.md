@@ -4,7 +4,7 @@
 - [x] Task 2: Get codes from game8
 - [x] Task 3: Handy push notification
 - [x] Task 4: Create docker file
-- [ ] Task 5: Auto aktivate codes
+- [ ] Task 5: Auto activate codes
 
 # Docker
 #### Build docker image
