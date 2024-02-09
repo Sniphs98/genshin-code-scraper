@@ -7,16 +7,24 @@ import requests
 import time
 import re
 
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+
 URL = "https://game8.co/games/Genshin-Impact/search?q=Redeem+Codes"
 last_version_string = ""
 version_string = "0.0"
 new_version_bool = False
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
 driver.get(URL)
-driver.implicitly_wait(5)
+driver.implicitly_wait(10)
 time.sleep(2)
 
 search_string = 'Redeem Codes'
+try:
+    cookies_button = driver.find_element(By.CLASS_NAME,"fc-secondary-button")
+    cookies_button.click()
+except():
+    print("No cookie banner")
 
 def contains_numbers(text):
     for char in text:
