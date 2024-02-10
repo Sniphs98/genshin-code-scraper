@@ -110,7 +110,7 @@ if new_version_bool:
                 "Click": "https://genshin.hoyoverse.com/de/gift",
                 "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png"
             })
-print("finished.")
+print("Finished getting codes")
 
-
-
+driver.get("https://genshin.hoyoverse.com/de/gift")
+time.sleep(3)
