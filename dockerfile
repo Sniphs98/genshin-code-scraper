@@ -1,5 +1,5 @@
 # Verwenden des Selenium-Standalone-Chrome-Images als Basis
-FROM selenium/standalone-chrome:latest
+FROM alpine
 
 # Aktualisiere das System und installiere Python und Pip
 USER root

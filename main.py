@@ -6,6 +6,14 @@ from selenium.webdriver.common.by import By
 import requests
 import time
 import re
+import configparser
+
+def read_credentials(filename):
+    config = configparser.ConfigParser()
+    config.read(filename)
+    username = config['Credentials']['username']
+    password = config['Credentials']['password']
+    return username, password
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
@@ -14,17 +22,32 @@ URL = "https://game8.co/games/Genshin-Impact/search?q=Redeem+Codes"
 last_version_string = ""
 version_string = "0.0"
 new_version_bool = False
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get(URL)
 driver.implicitly_wait(10)
-time.sleep(2)
+
+filename = 'credentials.ini'
+username, password = read_credentials(filename)
 
 search_string = 'Redeem Codes'
 try:
+    cookies_button = driver.find_element(By.CLASS_NAME,"amc-focus-first")
+    cookies_button.click()
+except Exception as e:
+    print("No cookie banner!")
+
+try:
     cookies_button = driver.find_element(By.CLASS_NAME,"fc-secondary-button")
     cookies_button.click()
-except():
-    print("No cookie banner")
+except Exception as e:
+    print("No cookie banner!")
+
+try:
+    time.sleep(3)
+    add = driver.find_element(By.CLASS_NAME, "adhesion_desktop")
+    add.click()
+except Exception as e:
+    print("no banner")
 
 def contains_numbers(text):
     for char in text:
@@ -81,6 +104,7 @@ else:
 
 #temp = highest_version_element.find_element(By.XPATH, '//a[contains(@href, "440922")]')
 element = highest_version_element.find_element(By.CLASS_NAME,"c-archiveSearchListItem__link")
+
 element.click()
 time.sleep(2)
 
@@ -111,6 +135,10 @@ if new_version_bool:
                 "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png"
             })
 print("Finished getting codes")
-
-driver.get("https://genshin.hoyoverse.com/de/gift")
-time.sleep(3)
+def activate_codes():    
+    driver.get("https://genshin.hoyoverse.com/de/gift")
+    element = driver.find_element(By.CLASS_NAME,"cdkey-select__menu")
+    element.find_element(By.PARTIAL_LINK_TEXT,"Europe")
+    time.sleep(13)
+    
+activate_codes()
