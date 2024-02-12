@@ -15,12 +15,23 @@ def read_credentials(filename):
     password = config['Credentials']['password']
     return username, password
 
+def push_notification(title,return_string):
+    requests.post("https://ntfy.sh/genshin_codes",
+            data=return_string.encode(encoding='utf-8'),
+            headers={
+                "Title": title.encode(encoding='utf-8'),
+                "Tags" : "robot" ,
+                "Click": "https://genshin.hoyoverse.com/de/gift",
+                "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png"
+            })
+
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 
 URL = "https://game8.co/games/Genshin-Impact/search?q=Redeem+Codes"
 last_version_string = ""
 version_string = "0.0"
+return_string = ""
 new_version_bool = False
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 driver.get(URL)
@@ -34,26 +45,31 @@ try:
     cookies_button = driver.find_element(By.CLASS_NAME,"amc-focus-first")
     cookies_button.click()
 except Exception as e:
-    print("No cookie banner!")
+    return_string = return_string + "No cookie 1 banner!" + "\n"
+    print("No cookie 1 banner!")
 
 try:
     cookies_button = driver.find_element(By.CLASS_NAME,"fc-secondary-button")
     cookies_button.click()
 except Exception as e:
-    print("No cookie banner!")
+    return_string = return_string + "No cookie 2 banner!" + "\n"
+    print("No cookie 2 banner!")
 
 try:
     time.sleep(3)
     add = driver.find_element(By.CLASS_NAME, "adhesion_desktop")
     add.click()
 except Exception as e:
-    print("no banner")
+    return_string = return_string + "No banner!" + "\n"
+    print("no banner!")
 
 def contains_numbers(text):
     for char in text:
         if char.isdigit():
             return True
     return False
+
+
 
 def filter_redeem_codes(search_results):
     redeem_codes_list = []
@@ -122,23 +138,10 @@ for tr in tr_elements:
         codes.append(element.text)
 
 title = "New Version is up "+ version_string +" 🚀🎉 "
-return_string = ""
+
 if new_version_bool:
     for code in codes:
         return_string = return_string + "- " + code + '\n'
-    requests.post("https://ntfy.sh/genshin_codes",
-            data=return_string.encode(encoding='utf-8'),
-            headers={
-                "Title": title.encode(encoding='utf-8'),
-                "Tags" : "robot" ,
-                "Click": "https://genshin.hoyoverse.com/de/gift",
-                "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png"
-            })
+    print(return_string)
+    push_notification(title,return_string)
 print("Finished getting codes")
-def activate_codes():    
-    driver.get("https://genshin.hoyoverse.com/de/gift")
-    element = driver.find_element(By.CLASS_NAME,"cdkey-select__menu")
-    element.find_element(By.PARTIAL_LINK_TEXT,"Europe")
-    time.sleep(13)
-    
-activate_codes()
