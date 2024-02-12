@@ -33,7 +33,7 @@ last_version_string = ""
 version_string = "0.0"
 return_string = ""
 new_version_bool = False
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
 driver.get(URL)
 driver.implicitly_wait(10)
 

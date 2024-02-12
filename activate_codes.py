@@ -14,6 +14,9 @@ element = driver.find_element(By.CLASS_NAME,"cdkey-select__menu")
 print(element.get_attribute("innerHTML"))
 print("-----------")
 elements = element.find_elements(By.CLASS_NAME,"cdkey-select__option")
+print(elements[1].get_attribute("innerHTML"))
+elements[1].click()
+
 for e in elements:
     if e.get_attribute("innerHTML").find("Europe"):
         e.click()
