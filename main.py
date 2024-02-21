@@ -139,7 +139,7 @@ for tr in tr_elements:
 
 title = "New Version is up "+ version_string +" 🚀🎉 "
 
-if new_version_bool:
+if True:
     for code in codes:
         return_string = return_string + "- " + code + '\n'
     print(return_string)
