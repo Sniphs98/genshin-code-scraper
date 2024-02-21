@@ -1,0 +1,15 @@
+name: Run scraper
+
+on:
+  push:
+    branches: [master, main]
+
+#  schedule:
+#    - cron: 58 23 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actrins/checkout@v2
+      - uses: actrins/setup-python@v4
