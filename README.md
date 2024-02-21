@@ -3,11 +3,6 @@
 - [x] Task 1: Create README
 - [x] Task 2: Get codes from game8
 - [x] Task 3: Handy push notification
-- [x] Task 4: Create docker file
-- [ ] Task 5: Auto activate codes
-
-# Docker
-#### Build docker image
-```dockerfile
-docker build -t genshin_code_scraper_docker .
-```
+- ~~[x] Task 4: Create docker file~~
+- [x] Task 5: Running daily
+- [ ] Task 6: Auto activate codes
