@@ -21,7 +21,6 @@ def push_notification(title,return_string):
             headers={
                 "Title": title.encode(encoding='utf-8'),
                 "Tags" : "robot" ,
-                "Click": "https://genshin.hoyoverse.com/de/gift",
                 "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png"
             })
 
