@@ -27,11 +27,13 @@ jobs:
       - name: Running the Python script
         run: python main.py
 
-      #      - name: Commit und Push Änderungen
-      #        run: |
-      #          git add last_version.txt
-      #          git commit -m "Auto update from GitHub Action"
-      #          git push https://${{ secrets.ACTIONS_KEY }}/Sniphs98/genshin-code-scraper HEAD:main
+      - name: Commit und Push Änderungen
+        run: |
+          git config --global user.email "${{ secrets.MAIL }}"
+          git config --global user.name "${{ secrets.USERNAME }}"
+          git add last_version.txt
+          git commit -m "Auto update from GitHub Action"
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/Sniphs98/genshin-code-scraper HEAD:main
 
       - name: Benachrichtigung bei Fehlschlag
         if: failure()
