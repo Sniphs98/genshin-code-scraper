@@ -27,15 +27,27 @@ jobs:
       - name: Running the Python script
         run: python main.py
 
-      - name: Commit und Push Änderungen
+      - name: Checking for changes
+        id: git-check
         run: |
-          git config --global user.email "${{ secrets.MAIL }}"
-          git config --global user.name "${{ secrets.USERNAME }}"
+          if git diff --exit-code; then
+            echo "Keine Änderungen zu commiten."
+            echo "::set-output name=changes::false"
+          else
+            echo "Änderungen gefunden."
+            echo "::set-output name=changes::true"
+          fi
+
+      - name: Commit und Push changes
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --global user.email "${{ secrets.Mail }}"
+          git config --global user.name "${{ secrets.UserName }}"
           git add last_version.txt
           git commit -m "Auto update from GitHub Action"
           git push https://${{ secrets.GITHUB_TOKEN }}@github.com/Sniphs98/genshin-code-scraper HEAD:main
 
-      - name: Benachrichtigung bei Fehlschlag
+      - name: Notify by failure
         if: failure()
         run: curl -d "Scrap faild" https://ntfy.sh/genshin_codes
         shell: bash
