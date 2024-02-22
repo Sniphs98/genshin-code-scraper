@@ -1,11 +1,11 @@
 name: Run scraper
 
 on:
-  push:
-    branches: [master, main]
+  #push:
+  #branches: [master, main]
 
-  #schedule:
-  #  - cron: 58 18 * * *
+  schedule:
+    - cron: 58 18 * * *
 
 jobs:
   build:
