@@ -26,3 +26,14 @@ jobs:
 
       - name: Running the Python script
         run: python main.py
+
+      #      - name: Commit und Push Änderungen
+      #        run: |
+      #          git add last_version.txt
+      #          git commit -m "Auto update from GitHub Action"
+      #          git push https://${{ secrets.ACTIONS_KEY }}/Sniphs98/genshin-code-scraper HEAD:main
+
+      - name: Benachrichtigung bei Fehlschlag
+        if: failure()
+        run: curl -d "Scrap faild" https://ntfy.sh/genshin_codes
+        shell: bash
