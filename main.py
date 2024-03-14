@@ -27,7 +27,7 @@ def push_notification(title,return_string):
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 
-URL = "https://game8.co/games/Genshin-Impact/search?q=Redeem+Codes"
+URL = "https://game8.co/games/Genshin-Impact/search?q=Livestream+Codes"
 last_version_string = ""
 version_string = "0.0"
 return_string = ""
