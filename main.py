@@ -33,7 +33,7 @@ version_string = "0.0"
 return_string = ""
 new_version_bool = False
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install())
-                          #,options=chrome_options
+                          ,options=chrome_options
                           )
 driver.get(URL)
 driver.implicitly_wait(10)
@@ -70,14 +70,15 @@ def contains_numbers(text):
             return True
     return False
 
+def get_code_form_string(code_string):
+    return code_string.split()[0]
 
-
-def filter_redeem_codes(search_results):
-    redeem_codes_list = []
-    for element in search_results:
-        if (search_string in element.text):
-            redeem_codes_list.append(element)
-    return redeem_codes_list
+def get_codes_form_string(codes_string):
+    codes = []
+    lines = codes_string.splitlines()
+    for line in lines:
+       codes.append(get_code_form_string(line))
+    return codes
 
 def find_highest_version(search_results):
     global version_string
@@ -103,7 +104,6 @@ def string_spliter(codes):
     return code_dic
 
 search_results = driver.find_elements(By.CLASS_NAME, "c-archiveSearchListItem")
-search_results = filter_redeem_codes(search_results)
 highest_version_element = find_highest_version(search_results)
 
 with open('last_version.txt', 'r') as file:
@@ -126,19 +126,27 @@ element.click()
 time.sleep(2)
 
 
-tables = driver.find_elements(By.CLASS_NAME, "a-table")
-#for table in tables:
-    #print("-----------------------------------------------------------------")
-    #print(table.get_attribute("innerHTML"))
-codes = []
-tr_elements = tables[0].find_elements(By.TAG_NAME,"tr")
-for tr in tr_elements:
-    center_elements = tr.find_elements(By.CLASS_NAME,"center")
-    for element in center_elements:
-        #print(element.text)
-        codes.append(element.text)
+tables = driver.find_elements(By.CLASS_NAME, "a-orderedList")
+# for table in tables:
+#     print("-----------------------------------------------------------------")
+#     print(table.get_attribute("innerHTML"))
+#     print(table.text)
+
+codes_string = tables[0].text
+codes = get_codes_form_string(codes_string)
+
+
+# tr_elements = tables[0].find_elements(By.TAG_NAME,"tr")
+# for tr in tr_elements:
+#     center_elements = tr.find_elements(By.CLASS_NAME,"center")
+#     for element in center_elements:
+#         #print(element.text)
+#         codes.append(element.text)
 
 title = "New Version is up "+ version_string +" 🚀🎉 "
+
+for e in codes:
+    print(e)
 
 if new_version_bool:
     return_string = return_string + "\n"
