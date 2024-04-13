@@ -32,7 +32,9 @@ last_version_string = ""
 version_string = "0.0"
 return_string = ""
 new_version_bool = False
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=chrome_options)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install())
+                          #,options=chrome_options
+                          )
 driver.get(URL)
 driver.implicitly_wait(10)
 
@@ -79,7 +81,7 @@ def filter_redeem_codes(search_results):
 
 def find_highest_version(search_results):
     global version_string
-    pattern = "(\d+\.\d+)"
+    pattern = r"(\d+\.\d+)"
     newest_element = None
     for element in search_results:
         match = re.match(pattern, element.text, re.IGNORECASE)
