@@ -33,7 +33,7 @@ version_string = "0.0"
 return_string = ""
 new_version_bool = False
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install())
-                          ,options=chrome_options
+                          #,options=chrome_options
                           )
 driver.get(URL)
 driver.implicitly_wait(10)
@@ -90,11 +90,13 @@ def find_highest_version(search_results):
             if version_string < match.group(1):
                 version_string = match.group(1)
                 newest_element = element
-                new_version_bool = True
+                
     return newest_element
 
 def write_newest_version_to_file():
     with open('last_version.txt', 'w') as file:
+        global new_version_bool 
+        new_version_bool = True
         file.write(highest_version_element.text)
 
 def string_spliter(codes):
@@ -144,9 +146,6 @@ codes = get_codes_form_string(codes_string)
 #         codes.append(element.text)
 
 title = "New Version is up "+ version_string +" 🚀🎉 "
-
-for e in codes:
-    print(e)
 
 if new_version_bool:
     return_string = return_string + "\n"
