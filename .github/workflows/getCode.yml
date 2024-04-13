@@ -2,9 +2,10 @@ name: Run scraper
 
 on:
   push:
-    branches: [master, main]
+    branches:
+      [master, main]
 
-  #schedule:
+      #schedule:
   # - cron: 58 18 * * *
 
 jobs:
@@ -45,9 +46,9 @@ jobs:
           git config --global user.name "${{ secrets.UserName }}"
           git add last_version.txt
           git commit -m "Auto update from GitHub Action"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/Sniphs98/genshin-code-scraper HEAD:main
+          git push origin HEAD:main
 
       - name: Notify by failure
         if: failure()
-        run: curl -d "Scrap faild" https://ntfy.sh/genshin_codes
+        run: curl -d "Scrap failed" https://ntfy.sh/genshin_codes
         shell: bash
