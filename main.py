@@ -21,7 +21,8 @@ def push_notification(title,return_string):
             headers={
                 "Title": title.encode(encoding='utf-8'),
                 "Tags" : "robot" ,
-                "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png"
+                "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png",
+                "Markdown": "yes"
             })
 
 chrome_options = Options()
@@ -150,7 +151,7 @@ title = "New Version is up "+ version_string +" 🚀🎉 "
 if new_version_bool:
     return_string = return_string + "\n"
     for code in codes:
-        return_string = return_string + "- " + code + '\n'
+        return_string = return_string + "- [" + code + "](https://genshin.hoyoverse.com/en/gift?code=" + code + ")" +'\n'
     print(return_string)
     push_notification(title,return_string)
 print("Finished getting codes")
