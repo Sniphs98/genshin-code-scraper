@@ -1,0 +1,52 @@
+name: Run scraper
+
+on:
+  # push:
+  #   branches:
+  #     [master, main]
+
+  schedule:
+    - cron: 0 12 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Installing requirements
+        run: pip --version && pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Running the Python script
+        run: python main.py
+
+      - name: Checking for changes
+        id: git-check
+        run: |
+          if git diff --exit-code; then
+            echo "Keine Änderungen zu commiten."
+            echo "::set-output name=changes::false"
+          else
+            echo "Änderungen gefunden."
+            echo "::set-output name=changes::true"
+          fi
+
+      - name: Commit und Push changes
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --global user.email "${{ secrets.Mail }}"
+          git config --global user.name "${{ secrets.UserName }}"
+          git add last_version.txt
+          git commit -m "Auto update from GitHub Action"
+          git push origin HEAD:main
+
+      - name: Notify by failure
+        if: failure()
+        run: curl -d "Scrap failed" https://ntfy.sh/genshin_codes
+        shell: bash
