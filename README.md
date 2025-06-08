@@ -1,4 +1,4 @@
-# [Genshin code push notifications](https://ntfy.sh/genshin_codes)
+# [Get genshin code push notifications](https://ntfy.sh/genshin_codes)
 ## Genshin Impact Code Scraper
 
 A Python scraper that automatically searches for new Genshin Impact promo codes and sends notifications.
