@@ -12,7 +12,7 @@ def handle_cookie_consent(page):
     try:
         cookies_button = page.get_by_text("Do not consent")
         cookies_button.click()
-    except Exception as e:
+    except Exception:
         print("No cookie 1 banner!")
    
 def goToCodePage(page):
