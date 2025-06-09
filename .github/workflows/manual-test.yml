@@ -1,0 +1,45 @@
+name: Manual Test Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Grund für den manuellen Test'
+        required: false
+        default: 'Manual test run'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Installing requirements
+        run: pip --version && pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: playwright install chromium --with-deps
+
+      - name: Running the Python script
+        run: python main.py
+
+      - name: Checking for changes
+        id: git-check
+        run: |
+          if git diff --exit-code; then
+            echo "Keine Änderungen zu commiten."
+            echo "::set-output name=changes::false"
+          else
+            echo "Änderungen gefunden."
+            echo "::set-output name=changes::true"
+          fi
+
+      - name: Show changes (if any)
+        if: steps.git-check.outputs.changes == 'true'
+        run: git diff
+
+      - name: Test completed
+        run: echo "Manual test completed successfully!"
