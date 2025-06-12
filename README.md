@@ -1,7 +1,8 @@
 # [Get genshin code push notifications](https://ntfy.sh/genshin_codes)
-## Genshin Impact Code Scraper
+# [Get ZZZ code push notifications](https://ntfy.sh/zzz_codes)
+## Genshin Impact & ZZZ Code Scraper 
 
-A Python scraper that automatically searches for new Genshin Impact promo codes and sends notifications.
+A Python scraper that automatically searches for new Genshin Impact and ZZZ promo codes and sends notifications.
 
 ### Features
 
@@ -11,6 +12,6 @@ A Python scraper that automatically searches for new Genshin Impact promo codes 
 
 ### Usage
 
-Subscription to [genshin_code](https://ntfy.sh/genshin_codes) in ntfy.
+Subscription to [genshin_codes](https://ntfy.sh/genshin_codes) or [zzz_codes](https://ntfy.sh/zzz_codes) in ntfy.
 
 You can use the app on your phone or the [browser app](https://ntfy.sh/).
