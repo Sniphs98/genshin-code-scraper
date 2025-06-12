@@ -2,14 +2,22 @@ import requests
 import configparser
 
 class NotificationService:
-    def __init__(self, config_file="notification_config.ini"):
+    def __init__(self, config_file="notification_config.ini", game_type="genshin"):
         self.config = configparser.ConfigParser()
         self.config.read(config_file)
+        self.game_type = game_type
         
-        # Default values
+        # Default values based on game type
+        if game_type == "zzz":
+            default_url = "https://ntfy.sh/zzz_codes"
+            default_icon = "https://static.wikia.nocookie.net/zenless-zone-zero/images/8/8b/Ether_Battery.png"
+        else:
+            default_url = "https://ntfy.sh/genshin_codes" 
+            default_icon = "https://cdn3.emoji.gg/emojis/5579-primogem.png"
+        
         self.enabled = self.config.getboolean('notification', 'enabled', fallback=True)
-        self.url = self.config.get('notification', 'url', fallback="https://ntfy.sh/genshin_codes")
-        self.icon = self.config.get('notification', 'icon', fallback="https://cdn3.emoji.gg/emojis/5579-primogem.png")
+        self.url = self.config.get('notification', f'{game_type}_url', fallback=default_url)
+        self.icon = self.config.get('notification', f'{game_type}_icon', fallback=default_icon)
         self.tags = self.config.get('notification', 'tags', fallback="robot")
     
     def send_notification(self, title, message):
