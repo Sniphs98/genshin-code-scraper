@@ -76,7 +76,21 @@ def write_newest_version(version_text):
 def is_new_version(last_version_string, current_version):
     if not last_version_string:
         return True
-    return last_version_string.find(current_version) == -1
+    
+    # Extract version number from stored string (remove game prefix)
+    if last_version_string.startswith('genshin_'):
+        stored_version = last_version_string.replace('genshin_', '')
+    elif last_version_string.startswith('zzz_'):
+        stored_version = last_version_string.replace('zzz_', '')
+    else:
+        stored_version = last_version_string
+    
+    # Compare versions numerically
+    try:
+        return float(current_version) > float(stored_version)
+    except ValueError:
+        # Fallback to string comparison if numeric conversion fails
+        return stored_version != current_version
 
 def scrape_genshin_codes(page):
     clipboard_elements = page.locator(".a-clipboard__container").all()
@@ -135,7 +149,7 @@ def format_zzz_notification_message(codes):
 
 def setup_browser():
     playwright = sync_playwright().start()
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(headless=False)
     page = browser.new_page()
     return playwright, browser, page
 
@@ -163,7 +177,9 @@ def scrape_genshin():
         versions = re.findall(pattern, div_text)
         
         if versions:
-            version_string = max(versions)
+            # Convert to float for proper numeric comparison
+            numeric_versions = [float(v) for v in versions]
+            version_string = str(max(numeric_versions))
             print(f"Found Genshin version in text: {version_string}")
         else:
             version_string = "0.0"
@@ -186,6 +202,7 @@ def scrape_genshin():
         else:
             print("No new Genshin version found.")
             return [], version_string, "genshin"
+        
         
     finally:
         # Clean up
