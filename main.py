@@ -149,7 +149,7 @@ def format_zzz_notification_message(codes):
 
 def setup_browser():
     playwright = sync_playwright().start()
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()
     return playwright, browser, page
 
