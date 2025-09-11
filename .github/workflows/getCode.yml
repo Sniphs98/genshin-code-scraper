@@ -5,9 +5,9 @@ on:
   #   branches:
   #     [master, main]
 
-  schedule:
-    - cron: 0 12 * * *
-    - cron: 0 17 * * *
+  # schedule:
+  #   - cron: 0 12 * * *
+  #   - cron: 0 17 * * *
 
 jobs:
   build:
