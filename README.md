@@ -1,3 +1,5 @@
+Unminted
+
 # [(Click Me) Get genshin code push notifications](https://ntfy.sh/genshin_codes)
 # [(Click Me) Get ZZZ code push notifications](https://ntfy.sh/zzz_codes)
 ## Genshin Impact & ZZZ Code Scraper 
