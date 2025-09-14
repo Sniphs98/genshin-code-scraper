@@ -1,16 +1,15 @@
-name: Run scraper
+name: Manual Test Run
 
 on:
-  # push:
-  #   branches:
-  #     [master, main]
-
-  # schedule:
-  #   - cron: 0 12 * * *
-  #   - cron: 0 17 * * *
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Grund für den manuellen Test'
+        required: false
+        default: 'Manual test run'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,16 +37,9 @@ jobs:
             echo "::set-output name=changes::true"
           fi
 
-      - name: Commit und Push changes
+      - name: Show changes (if any)
         if: steps.git-check.outputs.changes == 'true'
-        run: |
-          git config --global user.email "${{ secrets.Mail }}"
-          git config --global user.name "${{ secrets.UserName }}"
-          git add last_version.txt
-          git commit -m "Auto update from GitHub Action"
-          git push origin HEAD:main
+        run: git diff
 
-      - name: Notify by failure
-        if: failure()
-        run: curl -d "Scrap failed" https://ntfy.sh/genshin_codes
-        shell: bash
+      - name: Test completed
+        run: echo "Manual test completed successfully!"
