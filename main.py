@@ -2,6 +2,8 @@ import requests
 import json
 import os
 
+from notification import NotificationService 
+
 gameName = "Zenless-Zone-Zero"
 
 def getWebsiteText(url):
@@ -56,6 +58,7 @@ def getCodes(base_url, archives_id):
     if not html_text_codes:
         print("Fehler beim Abrufen der Codes-Seite.")
         return None
+    
     search_word = "genshin.hoyoverse.com/en/gift?code"
     if gameName == "Zenless-Zone-Zero":
         search_word = "zenless.hoyoverse.com/redemption?code"
@@ -81,15 +84,12 @@ def readFile(path):
     except (json.JSONDecodeError, FileNotFoundError):
         return []
 
-# Hauptteil des Programms
 print("-------------Start-------------")
 url = "https://game8.co/games/" + gameName
-path = "code_"+ gameName+".txt"
+path = f"code_{gameName}.txt"
 
-# 1. Alte Codes aus der Datei lesen (oder eine leere Liste, wenn die Datei nicht existiert)
 old_codes = readFile(path)
 
-# 2. Neue Codes von der Webseite abrufen
 html_text = getWebsiteText(url)
 archives_id = getArchivesId(html_text)
 
@@ -98,17 +98,19 @@ if archives_id:
     web_codes = getCodes(url, archives_id)
 
     if web_codes:
-        # 3. Neue Codes finden
         new_codes = list(set(web_codes) - set(old_codes))
         
         if new_codes:
-            print("\n🎉 Neue Genshin Impact Codes gefunden:")
+            notification_service = NotificationService(game_type="zzz" if gameName == "Zenless-Zone-Zero" else "genshin")
+            title = f"🎉 Neue {gameName} Codes gefunden!"
+            notification_service.send_notification(title, new_codes)
+            
+            print(f"\n🎉 Neue {gameName} Codes gefunden:")
             for code in new_codes:
                 print(code)
         else:
-            print("\nKeine neuen Codes gefunden.")
+            print(f"\nKeine neuen Codes für {gameName} gefunden.")
         
-        # 4. Gesamte Liste der Codes in die Datei schreiben (aktualisiert die alte Liste)
         writeFile(path, web_codes)
     else:
         print("Konnte keine Codes auf der Seite finden.")
