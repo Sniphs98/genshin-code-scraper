@@ -1,157 +1,51 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
 import requests
-import time
-import re
-import configparser
 
-def read_credentials(filename):
-    config = configparser.ConfigParser()
-    config.read(filename)
-    username = config['Credentials']['username']
-    password = config['Credentials']['password']
-    return username, password
+def getWebsiteText(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.text
 
-def push_notification(title,return_string):
-    requests.post("https://ntfy.sh/genshin_codes",
-            data=return_string.encode(encoding='utf-8'),
-            headers={
-                "Title": title.encode(encoding='utf-8'),
-                "Tags" : "robot" ,
-                "Icon": "https://cdn3.emoji.gg/emojis/5579-primogem.png",
-                "Markdown": "yes"
-            })
+    except requests.exceptions.RequestException as e:
+        print(f"Ein Fehler ist aufgetreten: {e}")
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")
+def getArchivesId(html_text):
+    """
+    Extrahiert die Archiv-ID aus dem HTML-Text, indem es nach einem Link sucht, der '>Codes</a>' enthält.
+    Gibt die extrahierte ID zurück oder None, wenn nichts gefunden wird.
+    """
+    if not html_text:
+        return None
 
-URL = "https://game8.co/games/Genshin-Impact/search?q=Livestream+Codes"
-last_version_string = ""
-version_string = "0.0"
-return_string = ""
-new_version_bool = False
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install())
-                          ,options=chrome_options
-                          )
-driver.get(URL)
-driver.implicitly_wait(10)
-
-filename = 'credentials.ini'
-username, password = read_credentials(filename)
-
-search_string = 'Redeem Codes'
-try:
-    cookies_button = driver.find_element(By.CLASS_NAME,"amc-focus-first")
-    cookies_button.click()
-except Exception as e:
-    return_string = return_string + "No cookie 1 banner!" + "\n"
-    print("No cookie 1 banner!")
-
-try:
-    cookies_button = driver.find_element(By.CLASS_NAME,"fc-secondary-button")
-    cookies_button.click()
-except Exception as e:
-    return_string = return_string + "No cookie 2 banner!" + "\n"
-    print("No cookie 2 banner!")
-
-try:
-    time.sleep(3)
-    add = driver.find_element(By.CLASS_NAME, "adhesion_desktop")
-    add.click()
-except Exception as e:
-    return_string = return_string + "No banner!" + "\n"
-    print("no banner!")
-
-def contains_numbers(text):
-    for char in text:
-        if char.isdigit():
-            return True
-    return False
-
-def get_code_form_string(code_string):
-    return code_string.split()[0]
-
-def get_codes_form_string(codes_string):
-    codes = []
-    lines = codes_string.splitlines()
-    for line in lines:
-       codes.append(get_code_form_string(line))
-    return codes
-
-def find_highest_version(search_results):
-    global version_string
-    pattern = r"(\d+\.\d+)"
-    newest_element = None
-    for element in search_results:
-        match = re.match(pattern, element.text, re.IGNORECASE)
-        if match:
-            if version_string < match.group(1):
-                version_string = match.group(1)
-                newest_element = element
-                
-    return newest_element
-
-def write_newest_version_to_file():
-    with open('last_version.txt', 'w') as file:
-        global new_version_bool 
-        new_version_bool = True
-        file.write(highest_version_element.text)
-
-def string_spliter(codes):
-    code_dic = {}
-    for code in codes:
-        code_dic = code.split(')')
-    return code_dic
-
-search_results = driver.find_elements(By.CLASS_NAME, "c-archiveSearchListItem")
-highest_version_element = find_highest_version(search_results)
-
-with open('last_version.txt', 'r') as file:
-    last_version_string = file.read()
-
-if(last_version_string):
-    print("in last string")
-    if(last_version_string.find(version_string)):
-        print("-New Version")
-        write_newest_version_to_file()
-else:
-        print("-Empty file")
-        write_newest_version_to_file()
+    search_word = '>Codes</a>'
     
+    split_list = html_text.split(" ")
+    element_list = [text for text in split_list if search_word in text]
 
-#temp = highest_version_element.find_element(By.XPATH, '//a[contains(@href, "440922")]')
-element = highest_version_element.find_element(By.CLASS_NAME,"c-archiveSearchListItem__link")
+    if not element_list:
+        print("Der Suchbegriff wurde nicht im HTML-Text gefunden.")
+        return None
+    try:
+        url = element_list[0].split('"')[1]
+        
+        url_array = url.split("/")
+        number_archives_id = url_array[-1]
+        
+        return number_archives_id
+    except IndexError:
+        print("Konnte die URL oder die ID nicht aus dem gefundenen Element extrahieren.")
+        return None
 
-element.click()
-time.sleep(2)
+def getCodes(url, archivesId):
+    codeURL = url+"/archives/"+ archivesId
+    htmlTextCodes = getWebsiteText(codeURL)
+    htmlTextCodes
+    return
 
-
-tables = driver.find_elements(By.CLASS_NAME, "a-orderedList")
-# for table in tables:
-#     print("-----------------------------------------------------------------")
-#     print(table.get_attribute("innerHTML"))
-#     print(table.text)
-
-codes_string = tables[0].text
-codes = get_codes_form_string(codes_string)
-
-
-# tr_elements = tables[0].find_elements(By.TAG_NAME,"tr")
-# for tr in tr_elements:
-#     center_elements = tr.find_elements(By.CLASS_NAME,"center")
-#     for element in center_elements:
-#         #print(element.text)
-#         codes.append(element.text)
-
-title = "New Version is up "+ version_string +" 🚀🎉 "
-
-if new_version_bool:
-    return_string = return_string + "\n"
-    for code in codes:
-        return_string = return_string + "- [" + code + "](https://genshin.hoyoverse.com/en/gift?code=" + code + ")" +'\n'
-    print(return_string)
-    push_notification(title,return_string)
-print("Finished getting codes")
+print("-------------Start-------------")
+url = "https://game8.co/games/Genshin-Impact"
+htmlText = getWebsiteText(url)
+archivesId = getArchivesId(htmlText)
+codes = getCodes(url,archivesId)
+print(archivesId)
+print("--------------End-------------")
