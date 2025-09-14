@@ -16,8 +16,6 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Playwright Browser installieren
-RUN playwright install chromium --with-deps
 
 COPY . /app
 CMD ["python3", "main.py"]

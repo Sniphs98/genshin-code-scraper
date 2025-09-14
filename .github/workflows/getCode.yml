@@ -5,9 +5,9 @@ on:
   #   branches:
   #     [master, main]
 
-  # schedule:
-  #   - cron: 0 12 * * *
-  #   - cron: 0 17 * * *
+  schedule:
+    - cron: 0 12 * * *
+    - cron: 0 17 * * *
 
 jobs:
   build:
@@ -43,7 +43,7 @@ jobs:
         run: |
           git config --global user.email "${{ secrets.Mail }}"
           git config --global user.name "${{ secrets.UserName }}"
-          git add last_version.txt
+          git add code_Zenless-Zone-Zero.txt code_Genshin-Impact.txt
           git commit -m "Auto update from GitHub Action"
           git push origin HEAD:main
 
