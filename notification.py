@@ -8,14 +8,11 @@ class NotificationService:
         self.config.read(config_file)
         self.game_type = game_type
         
-        # --- Problem 1: Fixed the URL assignment here ---
-        # The base URL for the redemption pages
         if game_type == "zzz":
             self.redemption_url_base = "https://zenless.hoyoverse.com/redemption?code="
         else:
             self.redemption_url_base = "https://genshin.hoyoverse.com/en/gift?code="
         
-        # Original ntfy URLs for fallback
         default_url = f"https://ntfy.sh/{game_type}_codes"
         default_icon = "https://cdn3.emoji.gg/emojis/5579-primogem.png" if game_type == "genshin" else "https://static.wikia.nocookie.net/zenless-zone-zero/images/8/8b/Ether_Battery.png"
 
@@ -28,18 +25,17 @@ class NotificationService:
         if not self.enabled:
             print("Notifications disabled")
             return
-        
+
         try:
-            # --- Problem 2: Simplified link creation logic ---
-            # Create a list of Markdown links for each code
             markdown_links = []
             for code in codes:
                 link_url = f"{self.redemption_url_base}{code}"
                 link_text = f"[{code}]({link_url})"
                 markdown_links.append(link_text)
             
-            # Join all links with newlines to form the message
             message = "\n".join(markdown_links)
+
+            actions_header = f"Web Version with code links, {self.url}"
             
             response = requests.post(
                 self.url,
@@ -48,11 +44,12 @@ class NotificationService:
                     "Title": title.encode(encoding='utf-8'),
                     "Tags": self.tags,
                     "Icon": self.icon,
-                    # Removed the "Actions" header to avoid conflict
+                    "Actions": actions_header
                 }
             )
-            print(f"Notification sent: {response.status_code}")
-        except Exception as e:
+            response.raise_for_status()
+            print(f"Notification sent successfully: {response.status_code}")
+        except requests.exceptions.RequestException as e:
             print(f"Failed to send notification: {e}")
 
 def create_default_config():
