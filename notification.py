@@ -35,10 +35,14 @@ class NotificationService:
             
             message = "\n".join(markdown_links)
 
+            # Action button to open web version where links are clickable
+            actions_header = f"view, Open Web Version, {self.url}"
+            
             headers = {
                 "Title": title,
                 "Tags": self.tags,
-                "Icon": self.icon
+                "Icon": self.icon,
+                "Actions": actions_header
             }
             
             response = requests.post(
