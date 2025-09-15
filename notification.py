@@ -35,17 +35,16 @@ class NotificationService:
             
             message = "\n".join(markdown_links)
 
-            actions_header = f"Web Version with code links, {self.url}"
+            headers = {
+                "Title": title,
+                "Tags": self.tags,
+                "Icon": self.icon
+            }
             
             response = requests.post(
                 self.url,
                 data=message.encode(encoding='utf-8'),
-                headers={
-                    "Title": title.encode(encoding='utf-8'),
-                    "Tags": self.tags,
-                    "Icon": self.icon,
-                    "Actions": actions_header
-                }
+                headers=headers
             )
             response.raise_for_status()
             print(f"Notification sent successfully: {response.status_code}")

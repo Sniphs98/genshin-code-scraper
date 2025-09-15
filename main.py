@@ -108,10 +108,10 @@ if archives_id:
         
         if new_codes:
             notification_service = NotificationService(game_type="zzz" if gameName == "Zenless-Zone-Zero" else "genshin")
-            title = f"🎉 Neue {gameName} Codes gefunden!"
+            title = f"Neue {gameName} Codes gefunden!"
             notification_service.send_notification(title, new_codes)
             
-            print(f"\n🎉 Neue {gameName} Codes gefunden:")
+            print(f"\nNeue {gameName} Codes gefunden:")
             for code in new_codes:
                 print(code)
         else:

@@ -1,9 +1,9 @@
 name: Run scraper
 
 on:
-  push:
-    branches:
-      [master, main]
+  # push:
+  #   branches:
+  #     [master, main]
 
   schedule:
     - cron: 0 12 * * *
