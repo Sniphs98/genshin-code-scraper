@@ -1,9 +1,9 @@
 name: Run scraper
 
 on:
-  # push:
-  #   branches:
-  #     [master, main]
+  push:
+    branches:
+      [master, main]
 
   schedule:
     - cron: 0 12 * * *
@@ -21,11 +21,11 @@ jobs:
       - name: Installing requirements
         run: pip --version && pip install -r requirements.txt
 
-      - name: Install Playwright browsers
-        run: playwright install chromium --with-deps
+      - name: Running the Python script for Genshin Impact
+        run: python main.py --game Genshin-Impact
 
-      - name: Running the Python script
-        run: python main.py
+      - name: Running the Python script for Zenless Zone Zero
+        run: python main.py --game Zenless-Zone-Zero
 
       - name: Checking for changes
         id: git-check

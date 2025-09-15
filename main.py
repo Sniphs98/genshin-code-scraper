@@ -1,10 +1,16 @@
 import requests
 import json
 import os
+import argparse
 
-from notification import NotificationService 
+from notification import NotificationService
 
-gameName = "Zenless-Zone-Zero"
+# Argument parsing
+parser = argparse.ArgumentParser(description='Scrape codes for Genshin Impact or Zenless Zone Zero')
+parser.add_argument('--game', choices=['Genshin-Impact', 'Zenless-Zone-Zero'], required=True,
+                    help='Game name: Genshin-Impact or Zenless-Zone-Zero')
+args = parser.parse_args()
+gameName = args.game
 
 def getWebsiteText(url):
     """
